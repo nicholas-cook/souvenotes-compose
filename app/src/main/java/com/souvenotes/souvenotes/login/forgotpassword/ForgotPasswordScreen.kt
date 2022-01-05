@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.souvenotes.souvenotes.R
+import com.souvenotes.souvenotes.SouvenotesSnackbarHost
 import com.souvenotes.souvenotes.TextFieldError
 import com.souvenotes.souvenotes.ui.theme.SouvenotesBrown
 import com.souvenotes.souvenotes.ui.theme.SouvenotesYellow
@@ -46,7 +47,10 @@ fun ForgotPasswordScreen(
     val scaffoldState = rememberScaffoldState()
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    Scaffold(topBar = { ForgotPasswordScreenBar(onNavigateUp) }, scaffoldState = scaffoldState) {
+    Scaffold(
+        topBar = { ForgotPasswordScreenBar(onNavigateUp) },
+        scaffoldState = scaffoldState,
+        snackbarHost = { SouvenotesSnackbarHost(hostState = it) }) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

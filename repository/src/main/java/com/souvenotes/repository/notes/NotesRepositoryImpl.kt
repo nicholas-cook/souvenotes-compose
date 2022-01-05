@@ -63,8 +63,9 @@ class NotesRepositoryImpl(private val userRepository: UserRepository) : NotesRep
     override fun removeNotesListListener() {
         notesListValueEventListener?.let {
             notesListQuery?.removeEventListener(it)
-            notesListQuery = null
         }
+        notesListQuery = null
+        notesListValueEventListener = null
     }
 
     override fun addNoteListener(noteKey: String, noteListener: NoteListener) {
@@ -100,8 +101,9 @@ class NotesRepositoryImpl(private val userRepository: UserRepository) : NotesRep
     override fun removeNoteListener() {
         noteValueEventListener?.let {
             noteReference?.removeEventListener(it)
-            noteReference = null
         }
+        noteReference = null
+        noteValueEventListener = null
     }
 
     override fun deleteNote(noteKey: String, deleteListener: (success: Boolean) -> Unit) {

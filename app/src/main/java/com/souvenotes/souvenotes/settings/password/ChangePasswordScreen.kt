@@ -63,6 +63,9 @@ fun ChangePasswordScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
+            if (changePasswordScreenState.progressBarVisible) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
             TextField(
                 value = changePasswordScreenState.password,
                 onValueChange = {

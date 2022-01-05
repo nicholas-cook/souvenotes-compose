@@ -9,12 +9,12 @@ import com.souvenotes.souvenotes.repository.prefs.SouvenotesPrefs
 
 class SettingsViewModel(private val souvenotesPrefs: SouvenotesPrefs) : ViewModel() {
 
-    var currentAppTheme by mutableStateOf(souvenotesPrefs.getAppThemePref())
+    var currentAppTheme by mutableStateOf(souvenotesPrefs.appThemePref)
         private set
 
     fun onAppThemeSelected(appThemePref: AppThemePref) {
         if (currentAppTheme != appThemePref) {
-            souvenotesPrefs.setAppThemePref(appThemePref)
+            souvenotesPrefs.appThemePref = appThemePref
             currentAppTheme = appThemePref
         }
     }

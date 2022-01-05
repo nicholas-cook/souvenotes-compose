@@ -4,8 +4,8 @@
 </p> <p>The terms used in this Privacy Policy have the same meanings as in the Terms and Conditions, which are accessible in the Souvenotes application unless otherwise defined in this Privacy Policy.
 </p> <p><strong>Information Collection and Use</strong></p> <p>For a better experience, while using Souvenotes, you may be required to provide the application with certain personally identifiable information, including but not limited to: email address. The information that is requested is used only to create and manage your account.
 </p> <p>The app does use third party services that may collect information used to identify you.</p> <div><p>Link to privacy policies of third party service providers used by the app </p> <ul>
-<li><a href="https://www.google.com/policies/privacy/" target="_blank">Google Privacy Policy (Firebase and AdMob)</a></li>
-<li><a href="https://www.google.com/policies/technologies/ads/" target="_blank">Google Ad Policies and Settings</a></li>
+<li><a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy (Firebase and AdMob)</a></li>
+<li><a href="https://policies.google.com/technologies/ads" target="_blank">Google Ad Policies and Settings</a></li>
 </ul></div>
 <p><strong>Log Data</strong></p> <p> In case of an error in the application, data from your device may be collected. This Log Data may include information such as your device's Internet Protocol ("IP") address, device name, operating system version, the configuration of the application when utilizing it, the time and date of your use of the application, and other statistics. This Log Data is used only to help find the cause of the error and to fix the error.
 </p> <p><strong>Cookies</strong></p> <p>Cookies are files with a small amount of data that are commonly used as an anonymous unique identifier. These are sent from other services and are stored on your device's internal memory. Souvenotes does not use these cookies explicitly. However, Souvenotes may use third party code or libraries that use cookies to collect information and to improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse cookies, you may not be able to use all or some portions of Souvenotes.
@@ -14,5 +14,5 @@
 </p> <p><strong>Children's Privacy</strong></p> <p>Children under the age of 13 are not permitted to use the application or provide any data to us. Souvenotes does not knowingly collect personally identifiable information from children under 13. In the case Souvenotes discovers that a child under 13 has provided us with personal information, we will immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided Souvenotes with personal information, please contact Souvenotes support at sovenotes.app+support@gmail.com so that we may perform any necessary actions.
 </p> <p><strong>Changes to This Privacy Policy</strong></p> <p>Souvenotes may update this Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. Souvenotes will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately after they are posted on this page.
 </p> <p><strong>Contact Us</strong></p> <p>If you have any questions about this Privacy Policy, do not hesitate to contact us at sovenotes.app+privacy@gmail.com.
-<p>Last updated December 22, 2017</p>
+<p>Last updated January 3, 2022</p>
 </p></body></html>

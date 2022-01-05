@@ -7,7 +7,7 @@ import com.souvenotes.souvenotes.repository.prefs.SouvenotesPrefs
 class FakeSouvenotesPrefs : SouvenotesPrefs {
 
     private var listener: SharedPreferences.OnSharedPreferenceChangeListener? = null
-    private var appThemePref = AppThemePref.System
+    private var currentAppThemePref = AppThemePref.System
 
     override fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         this.listener = listener
@@ -17,11 +17,9 @@ class FakeSouvenotesPrefs : SouvenotesPrefs {
         this.listener = null
     }
 
-    override fun getAppThemePref(): AppThemePref {
-        return appThemePref
-    }
-
-    override fun setAppThemePref(appThemePref: AppThemePref) {
-        this.appThemePref = appThemePref
-    }
+    override var appThemePref: AppThemePref
+        get() = currentAppThemePref
+        set(value) {
+            currentAppThemePref = value
+        }
 }

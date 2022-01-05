@@ -21,6 +21,6 @@ class SettingsViewModelTest {
     fun `Test changing app theme is successful`() {
         viewModel.onAppThemeSelected(AppThemePref.Dark)
         Assert.assertEquals(AppThemePref.Dark, viewModel.currentAppTheme)
-        Assert.assertEquals(AppThemePref.Dark, souvenotesPrefs.getAppThemePref())
+        Assert.assertEquals(AppThemePref.Dark, souvenotesPrefs.appThemePref)
     }
 }

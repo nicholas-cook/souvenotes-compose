@@ -134,3 +134,15 @@ fun getAdSize(context: Context): AdSize {
     }
     return AdSize.BANNER
 }
+
+@Composable
+fun SouvenotesSnackbarHost(hostState: SnackbarHostState) {
+    val actionColor = if (MaterialTheme.colors.isLight) {
+        SouvenotesYellow
+    } else {
+        SouvenotesBrown
+    }
+    SnackbarHost(hostState = hostState) { data ->
+        Snackbar(snackbarData = data, actionColor = actionColor)
+    }
+}

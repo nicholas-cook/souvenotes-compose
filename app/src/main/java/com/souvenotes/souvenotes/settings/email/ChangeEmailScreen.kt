@@ -63,6 +63,9 @@ fun ChangeEmailScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
+            if (changeEmailScreenState.progressBarVisible) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
             TextField(
                 value = changeEmailScreenState.email,
                 onValueChange = {

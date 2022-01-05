@@ -40,11 +40,11 @@ import org.koin.core.parameter.parametersOf
 class MainActivity : ComponentActivity() {
 
     private val souvenotesPrefs: SouvenotesPrefs by inject()
-    private var appTheme by mutableStateOf(souvenotesPrefs.getAppThemePref())
+    private var appTheme by mutableStateOf(souvenotesPrefs.appThemePref)
     private val appThemeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == SouvenotesPrefs.KEY_APP_THEME_PREF) {
-                appTheme = souvenotesPrefs.getAppThemePref()
+                appTheme = souvenotesPrefs.appThemePref
             }
         }
 

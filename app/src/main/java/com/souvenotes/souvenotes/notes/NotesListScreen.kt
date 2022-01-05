@@ -102,14 +102,18 @@ fun NotesListScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                itemsIndexed(notesListScreenState.notes) { index, note ->
-                    Column(modifier = Modifier.combinedClickable(
-                        onClick = {
-                            onNoteClicked(
-                                note.key,
-                                note.createdAt
-                            )
-                        }, onLongClick = { deleteNoteKey = note.key })
+                itemsIndexed(
+                    items = notesListScreenState.notes,
+                    key = { _, note -> note.key }) { index, note ->
+                    Column(modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+                                onNoteClicked(
+                                    note.key,
+                                    note.createdAt
+                                )
+                            }, onLongClick = { deleteNoteKey = note.key })
+                        .animateItemPlacement()
                     ) {
                         Text(
                             text = if (note.title.isEmpty()) {
