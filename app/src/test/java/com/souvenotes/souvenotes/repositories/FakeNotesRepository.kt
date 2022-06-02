@@ -49,9 +49,10 @@ class FakeNotesRepository(private val userRepository: UserRepository) : NotesRep
         deleteListener(noteKey == VALID_NOTE_KEY)
     }
 
-    override fun addNote(title: String, content: String) {
+    override fun addNote(title: String, content: String): String {
         currentNoteTitle = title
         currentNoteContent = content
+        return VALID_NOTE_KEY
     }
 
     override fun updateNote(title: String, content: String, createdAt: Long, noteKey: String) {

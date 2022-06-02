@@ -118,7 +118,7 @@ class NotesRepositoryImpl(private val userRepository: UserRepository) : NotesRep
         }
     }
 
-    override fun addNote(title: String, content: String) {
+    override fun addNote(title: String, content: String): String {
         val userId = userRepository.getUserId()
         if (userId != null) {
             val notesValues = hashMapOf(Pair("title", title), Pair("content", content))
@@ -135,7 +135,9 @@ class NotesRepositoryImpl(private val userRepository: UserRepository) : NotesRep
             childUpdates["/notes-list/$userId/$key"] = notesListValues
 
             databaseReference.updateChildren(childUpdates)
+            return key ?: ""
         }
+        return ""
     }
 
     override fun updateNote(title: String, content: String, createdAt: Long, noteKey: String) {

@@ -8,7 +8,7 @@ import com.souvenotes.repository.notes.NoteListener
 import com.souvenotes.repository.notes.NotesRepository
 
 class EditNoteViewModel(
-    private val noteKey: String,
+    private var noteKey: String,
     private val createdAt: Long,
     private val notesRepository: NotesRepository
 ) : ViewModel() {
@@ -74,7 +74,9 @@ class EditNoteViewModel(
                 noteKey
             )
         } else {
-            notesRepository.addNote(editNoteScreenState.title, editNoteScreenState.content)
+            // Update note key to prevent duplicate notes
+            noteKey =
+                notesRepository.addNote(editNoteScreenState.title, editNoteScreenState.content)
         }
     }
 

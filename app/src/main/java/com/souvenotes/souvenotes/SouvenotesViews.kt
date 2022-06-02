@@ -104,7 +104,7 @@ fun SouvenotesAlertDialog(
 fun getAdView(context: Context, adId: String): AdView {
     return AdView(context).apply {
         adUnitId = adId
-        adSize = getAdSize(context)
+        setAdSize(getAdSize(context))
         loadAd(AdRequest.Builder().build())
     }
 }

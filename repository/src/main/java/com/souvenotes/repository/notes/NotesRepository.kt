@@ -12,7 +12,7 @@ interface NotesRepository {
 
     fun deleteNote(noteKey: String, deleteListener: (success: Boolean) -> Unit)
 
-    fun addNote(title: String, content: String)
+    fun addNote(title: String, content: String): String
 
     fun updateNote(title: String, content: String, createdAt: Long, noteKey: String)
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -34,8 +34,8 @@ android {
 dependencies {
 
     // Firebase authentication and database
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
-    implementation "com.google.firebase:firebase-database:20.0.3"
+    implementation 'com.google.firebase:firebase-auth:21.0.5'
+    implementation "com.google.firebase:firebase-database:20.0.5"
 
     // Joda-Time for date formatting
     implementation 'net.danlew:android.joda:2.10.12.2'
