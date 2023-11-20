@@ -57,9 +57,10 @@ fun ChangePasswordScreen(
             onChangePasswordSuccess()
         }
     }
-    Scaffold(topBar = { ChangePasswordScreenBar(onNavigateUp = onNavigateUp) }) {
+    Scaffold(topBar = { ChangePasswordScreenBar(onNavigateUp = onNavigateUp) }) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

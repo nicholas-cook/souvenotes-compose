@@ -57,9 +57,13 @@ fun ChangeEmailScreen(
             onChangeEmailSuccess()
         }
     }
-    Scaffold(topBar = { ChangeEmailScreenBar(onNavigateUp) }, scaffoldState = scaffoldState) {
+    Scaffold(
+        topBar = { ChangeEmailScreenBar(onNavigateUp) },
+        scaffoldState = scaffoldState
+    ) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

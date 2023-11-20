@@ -81,7 +81,7 @@ fun EditNoteScreen(
             )
         },
         scaffoldState = scaffoldState
-    ) {
+    ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize()) {
             TextField(
                 value = editNoteScreenState.title,
@@ -89,6 +89,7 @@ fun EditNoteScreen(
                     onTitleChanged(it)
                 },
                 modifier = Modifier
+                    .padding(paddingValues)
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
                     .fillMaxWidth(),
                 label = {

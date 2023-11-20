@@ -83,8 +83,10 @@ fun NotesListScreen(
             ) {
                 Icon(Icons.Filled.Add, stringResource(R.string.fab_content_description))
             }
-        }) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        }) { paddingValues ->
+        Column(modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()) {
             if (notesListScreenState.notes.isEmpty()) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

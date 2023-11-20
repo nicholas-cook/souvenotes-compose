@@ -50,9 +50,10 @@ fun ForgotPasswordScreen(
     Scaffold(
         topBar = { ForgotPasswordScreenBar(onNavigateUp) },
         scaffoldState = scaffoldState,
-        snackbarHost = { SouvenotesSnackbarHost(hostState = it) }) {
+        snackbarHost = { SouvenotesSnackbarHost(hostState = it) }) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

@@ -2,6 +2,7 @@ package com.souvenotes.souvenotes.landing
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,8 +20,13 @@ fun LandingScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToList: () -> Unit
 ) {
-    Scaffold(topBar = { SouvenotesAppBar(title = R.string.app_name) }) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Scaffold(topBar = { SouvenotesAppBar(title = R.string.app_name) }) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator()
         }
     }

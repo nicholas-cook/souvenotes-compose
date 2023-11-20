@@ -61,9 +61,10 @@ fun ReauthScreen(
             destinationScreen = destinationScreen,
             onNavigateUp = onNavigateUp
         )
-    }, scaffoldState = scaffoldState) {
+    }, scaffoldState = scaffoldState) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

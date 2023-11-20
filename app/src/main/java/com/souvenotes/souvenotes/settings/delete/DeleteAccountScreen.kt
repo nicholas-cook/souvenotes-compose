@@ -44,9 +44,10 @@ fun DeleteAccountScreen(
     Scaffold(
         topBar = { DeleteAccountScreenBar(onNavigateUp = onNavigateUp) },
         scaffoldState = scaffoldState
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

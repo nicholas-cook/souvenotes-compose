@@ -57,9 +57,13 @@ fun RegistrationScreen(
     val scaffoldState = rememberScaffoldState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
-    Scaffold(topBar = { RegistrationScreenBar(onNavigateUp) }, scaffoldState = scaffoldState) {
+    Scaffold(
+        topBar = { RegistrationScreenBar(onNavigateUp) },
+        scaffoldState = scaffoldState
+    ) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

@@ -59,9 +59,10 @@ fun LoginScreen(
     Scaffold(
         topBar = { SouvenotesAppBar(title = R.string.title_login) },
         scaffoldState = scaffoldState
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

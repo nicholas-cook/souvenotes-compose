@@ -42,9 +42,15 @@ fun PolicyScreen(
     onNavigateUp: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    Scaffold(topBar = { PolicyScreenBar(policyType = policyType, onNavigateUp = onNavigateUp) }) {
+    Scaffold(topBar = {
+        PolicyScreenBar(
+            policyType = policyType,
+            onNavigateUp = onNavigateUp
+        )
+    }) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {

@@ -44,9 +44,10 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     var showThemeDialog: Boolean by remember { mutableStateOf(false) }
     var showEmailDialog: Boolean by remember { mutableStateOf(false) }
-    Scaffold(topBar = { SettingsScreenBar(onNavigateUp = onNavigateUp) }) {
+    Scaffold(topBar = { SettingsScreenBar(onNavigateUp = onNavigateUp) }) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
