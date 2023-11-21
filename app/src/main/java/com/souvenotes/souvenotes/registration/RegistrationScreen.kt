@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
+import org.koin.androidx.compose.getViewModel
 
 data class RegistrationScreenState(
     val email: String = "",
@@ -39,6 +40,29 @@ data class RegistrationScreenState(
     val registrationError: Int? = null,
     val registrationSuccess: Boolean = false
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun RegistrationRoute(
+    onTermsClicked: () -> Unit,
+    onPrivacyClicked: () -> Unit,
+    onRegistrationSuccess: () -> Unit,
+    onNavigateUp: () -> Unit,
+    viewModel: RegistrationViewModel = getViewModel()
+) {
+    RegistrationScreen(
+        registrationScreenState = viewModel.registrationScreenState,
+        onEmailChanged = viewModel::onEmailChanged,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
+        onSignUpClicked = viewModel::onSignUpClicked,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onTermsClicked = onTermsClicked,
+        onPrivacyClicked = onPrivacyClicked,
+        onRegistrationSuccess = onRegistrationSuccess,
+        onNavigateUp = onNavigateUp
+    )
+}
 
 @ExperimentalComposeUiApi
 @Composable

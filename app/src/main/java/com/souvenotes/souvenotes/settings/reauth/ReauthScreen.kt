@@ -27,6 +27,7 @@ import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.SouvenotesScreen
 import com.souvenotes.souvenotes.TextFieldError
+import org.koin.androidx.compose.getViewModel
 
 data class ReauthScreenState(
     val password: String = "",
@@ -36,6 +37,25 @@ data class ReauthScreenState(
     val reauthSuccess: Boolean = false,
     val reauthError: Int? = null
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ReauthRoute(
+    destinationScreen: SouvenotesScreen,
+    onReauthSuccess: () -> Unit,
+    onNavigateUp: () -> Unit,
+    viewModel: ReauthViewModel = getViewModel()
+) {
+    ReauthScreen(
+        destinationScreen = destinationScreen,
+        reauthScreenState = viewModel.reauthScreenState,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onSubmitClicked = viewModel::onSubmitClicked,
+        onReauthSuccess = onReauthSuccess,
+        onNavigateUp = onNavigateUp
+    )
+}
 
 @ExperimentalComposeUiApi
 @Composable

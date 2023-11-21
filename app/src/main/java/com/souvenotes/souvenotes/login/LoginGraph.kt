@@ -7,9 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.souvenotes.souvenotes.SouvenotesGraph
 import com.souvenotes.souvenotes.SouvenotesScreen
-import com.souvenotes.souvenotes.login.forgotpassword.ForgotPasswordScreen
-import com.souvenotes.souvenotes.login.forgotpassword.ForgotPasswordViewModel
-import org.koin.androidx.compose.getViewModel
+import com.souvenotes.souvenotes.login.forgotpassword.ForgotPasswordRoute
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
@@ -18,13 +16,7 @@ fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
         route = SouvenotesGraph.Auth.name
     ) {
         composable(SouvenotesScreen.Login.name) {
-            val loginViewModel: LoginViewModel = getViewModel()
-            LoginScreen(
-                loginScreenState = loginViewModel.loginsScreenState,
-                onEmailChanged = loginViewModel::onEmailChanged,
-                onPasswordChanged = loginViewModel::onPasswordChanged,
-                onSubmitClicked = loginViewModel::onSubmitClicked,
-                onErrorDismissed = loginViewModel::onLoginErrorDismissed,
+            LoginRoute(
                 onCreateAccountClicked = {
                     navHostController.navigate(SouvenotesGraph.UserRegistration.name)
                 },
@@ -37,18 +29,10 @@ fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
                             inclusive = true
                         }
                     }
-                }
-            )
+                })
         }
         composable(SouvenotesScreen.ForgotPassword.name) {
-            val forgotPasswordViewModel: ForgotPasswordViewModel = getViewModel()
-            ForgotPasswordScreen(
-                forgotPasswordScreenState = forgotPasswordViewModel.forgotPasswordScreenState,
-                onEmailChanged = forgotPasswordViewModel::onEmailChanged,
-                onNavigateUp = { navHostController.navigateUp() },
-                onResetClicked = forgotPasswordViewModel::onResetClicked,
-                onErrorDismissed = forgotPasswordViewModel::onResetErrorDismissed
-            )
+            ForgotPasswordRoute(onNavigateUp = { navHostController.navigateUp() })
         }
     }
 }

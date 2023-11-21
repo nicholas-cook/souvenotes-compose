@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
+import org.koin.androidx.compose.getViewModel
 
 data class ChangePasswordScreenState(
     val password: String = "",
@@ -36,6 +37,23 @@ data class ChangePasswordScreenState(
     val changePasswordSuccess: Boolean = false,
     val changePasswordError: Int? = null
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ChangePasswordRoute(
+    onChangePasswordSuccess: () -> Unit,
+    onNavigateUp: () -> Unit,
+    viewModel: ChangePasswordViewModel = getViewModel()
+) {
+    ChangePasswordScreen(
+        changePasswordScreenState = viewModel.changePasswordScreenState,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onSubmitClicked = viewModel::onSubmitClicked,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onChangePasswordSuccess = onChangePasswordSuccess,
+        onNavigateUp = onNavigateUp
+    )
+}
 
 @ExperimentalComposeUiApi
 @Composable

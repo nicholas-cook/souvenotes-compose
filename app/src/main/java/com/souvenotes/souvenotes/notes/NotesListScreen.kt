@@ -27,12 +27,36 @@ import com.souvenotes.souvenotes.ui.theme.SouvenotesBrown
 import com.souvenotes.souvenotes.ui.theme.SouvenotesLightGray
 import com.souvenotes.souvenotes.ui.theme.SouvenotesLighterGray
 import com.souvenotes.souvenotes.ui.theme.SouvenotesYellow
+import org.koin.androidx.compose.getViewModel
 
 data class NotesListScreenState(
     val notes: List<NotesListItem> = listOf(),
     val notesError: Int? = null,
     val toLogin: Boolean = false
 )
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun NotesListRoute(
+    onNoteClicked: (String, Long) -> Unit,
+    onAddNoteClicked: () -> Unit,
+    toLoginScreen: () -> Unit,
+    onSettingsClicked: () -> Unit,
+    viewModel: NotesListViewModel = getViewModel()
+) {
+    NotesListScreen(
+        notesListScreenState = viewModel.notesListScreenState,
+        onNoteClicked = onNoteClicked,
+        onAddNoteClicked = onAddNoteClicked,
+        onDeleteNote = { noteKey ->
+            viewModel.deleteNote(noteKey)
+        },
+        toLoginScreen = toLoginScreen,
+        onErrorDismissed = viewModel::onNotesErrorDismissed,
+        onLogoutClicked = viewModel::logout,
+        onSettingsClicked = onSettingsClicked
+    )
+}
 
 @ExperimentalFoundationApi
 @Composable
@@ -84,9 +108,11 @@ fun NotesListScreen(
                 Icon(Icons.Filled.Add, stringResource(R.string.fab_content_description))
             }
         }) { paddingValues ->
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
             if (notesListScreenState.notes.isEmpty()) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

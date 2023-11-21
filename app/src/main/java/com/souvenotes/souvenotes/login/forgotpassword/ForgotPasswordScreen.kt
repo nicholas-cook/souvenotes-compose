@@ -25,6 +25,7 @@ import com.souvenotes.souvenotes.SouvenotesSnackbarHost
 import com.souvenotes.souvenotes.TextFieldError
 import com.souvenotes.souvenotes.ui.theme.SouvenotesBrown
 import com.souvenotes.souvenotes.ui.theme.SouvenotesYellow
+import org.koin.androidx.compose.getViewModel
 
 data class ForgotPasswordScreenState(
     val email: String = "",
@@ -34,6 +35,21 @@ data class ForgotPasswordScreenState(
     val resetError: Int? = null,
     val resetSuccess: Boolean = false
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ForgotPasswordRoute(
+    onNavigateUp: () -> Unit,
+    viewModel: ForgotPasswordViewModel = getViewModel()
+) {
+    ForgotPasswordScreen(
+        forgotPasswordScreenState = viewModel.forgotPasswordScreenState,
+        onEmailChanged = viewModel::onEmailChanged,
+        onNavigateUp = onNavigateUp,
+        onResetClicked = viewModel::onResetClicked,
+        onErrorDismissed = viewModel::onResetErrorDismissed
+    )
+}
 
 @ExperimentalComposeUiApi
 @Composable

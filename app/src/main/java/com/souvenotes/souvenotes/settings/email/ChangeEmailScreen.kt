@@ -18,7 +18,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
+import org.koin.androidx.compose.getViewModel
 
 data class ChangeEmailScreenState(
     val email: String = "",
@@ -36,6 +36,23 @@ data class ChangeEmailScreenState(
     val changeEmailSuccess: Boolean = false,
     val changeEmailError: Int? = null
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ChangeEmailRoute(
+    onChangeEmailSuccess: () -> Unit,
+    onNavigateUp: () -> Unit,
+    viewModel: ChangeEmailViewModel = getViewModel()
+) {
+    ChangeEmailScreen(
+        changeEmailScreenState = viewModel.changeEmailScreenState,
+        onEmailChanged = viewModel::onEmailChanged,
+        onSubmitClicked = viewModel::onSubmitClicked,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onChangeEmailSuccess = onChangeEmailSuccess,
+        onNavigateUp = onNavigateUp
+    )
+}
 
 @ExperimentalComposeUiApi
 @Composable

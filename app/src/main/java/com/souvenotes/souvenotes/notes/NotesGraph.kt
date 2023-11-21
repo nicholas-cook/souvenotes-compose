@@ -2,8 +2,12 @@ package com.souvenotes.souvenotes.notes
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.navigation.*
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.souvenotes.souvenotes.SouvenotesGraph
 import com.souvenotes.souvenotes.SouvenotesScreen
 import com.souvenotes.souvenotes.notes.edit.EditNoteScreen
@@ -19,18 +23,11 @@ fun NavGraphBuilder.notesGraph(navHostController: NavHostController) {
         route = SouvenotesGraph.Notes.name
     ) {
         composable(SouvenotesScreen.NotesList.name) {
-            val notesListViewModel = getViewModel<NotesListViewModel>()
-            NotesListScreen(
-                notesListScreenState = notesListViewModel.notesListScreenState,
+            NotesListRoute(
                 onNoteClicked = { noteKey, createdAt ->
                     navHostController.navigate("${SouvenotesScreen.EditNote.name}?noteKey=$noteKey&createdAt=$createdAt")
                 },
-                onAddNoteClicked = {
-                    navHostController.navigate(SouvenotesScreen.EditNote.name)
-                },
-                onDeleteNote = { noteKey ->
-                    notesListViewModel.deleteNote(noteKey)
-                },
+                onAddNoteClicked = { navHostController.navigate(SouvenotesScreen.EditNote.name) },
                 toLoginScreen = {
                     navHostController.navigate(SouvenotesGraph.Auth.name) {
                         popUpTo(SouvenotesScreen.NotesList.name) {
@@ -38,10 +35,7 @@ fun NavGraphBuilder.notesGraph(navHostController: NavHostController) {
                         }
                     }
                 },
-                onErrorDismissed = notesListViewModel::onNotesErrorDismissed,
-                onLogoutClicked = notesListViewModel::logout,
-                onSettingsClicked = { navHostController.navigate(SouvenotesGraph.UserSettings.name) }
-            )
+                onSettingsClicked = { navHostController.navigate(SouvenotesGraph.UserSettings.name) })
         }
         composable(
             route = "${SouvenotesScreen.EditNote.name}?noteKey={noteKey}&createdAt={createdAt}",

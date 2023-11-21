@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
+import org.koin.androidx.compose.getViewModel
 
 data class LoginScreenState(
     val email: String = "",
@@ -35,6 +36,27 @@ data class LoginScreenState(
     val loginError: Int? = null,
     val loginSuccess: Boolean = false
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun LoginRoute(
+    onCreateAccountClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = getViewModel()
+) {
+    val loginScreenState = viewModel.loginsScreenState
+    LoginScreen(
+        loginScreenState = loginScreenState,
+        onEmailChanged = viewModel::onEmailChanged,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onSubmitClicked = viewModel::onSubmitClicked,
+        onErrorDismissed = viewModel::onLoginErrorDismissed,
+        onCreateAccountClicked = onCreateAccountClicked,
+        onForgotPasswordClicked = onForgotPasswordClicked,
+        onLoginSuccess = onLoginSuccess
+    )
+}
 
 @ExperimentalComposeUiApi
 @Composable
