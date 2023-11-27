@@ -1,5 +1,6 @@
 package com.souvenotes.souvenotes.settings
 
+import android.os.Build
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -37,7 +38,11 @@ fun NavGraphBuilder.settingsGraph(navHostController: NavHostController) {
                     type = NavType.EnumType(SouvenotesScreen::class.java)
                 })
         ) { entry ->
-            val destinationScreen = entry.arguments?.getSerializable("destinationScreen")
+            val destinationScreen = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                entry.arguments?.getSerializable("destinationScreen", SouvenotesScreen::class.java)
+            } else {
+                entry.arguments?.getSerializable("destinationScreen")
+            }
             ReauthRoute(
                 destinationScreen = destinationScreen as SouvenotesScreen,
                 onReauthSuccess = {

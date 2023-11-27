@@ -8,8 +8,11 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.LoginState
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     companion object {
         private const val EMAIL_MAX_LENGTH = 100
@@ -67,10 +70,12 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
                         loginError = R.string.error_credentials,
                         progressBarVisible = false
                     )
+
                     LoginState.InvalidUser -> loginsScreenState.copy(
                         loginError = R.string.error_account,
                         progressBarVisible = false
                     )
+
                     LoginState.Error -> loginsScreenState.copy(
                         loginError = R.string.login_error,
                         progressBarVisible = false

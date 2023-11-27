@@ -1,6 +1,6 @@
 package com.souvenotes.souvenotes.repository.prefs
 
-import android.content.SharedPreferences
+import kotlinx.coroutines.flow.StateFlow
 
 interface SouvenotesPrefs {
 
@@ -9,9 +9,7 @@ interface SouvenotesPrefs {
         internal const val KEY_APP_THEME_PREF = "APP_THEME_PREF"
     }
 
-    fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener)
+    val appThemePrefFlow: StateFlow<AppThemePref>
 
-    fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener)
-
-    var appThemePref: AppThemePref
+    fun setAppThemePref(appThemePref: AppThemePref)
 }

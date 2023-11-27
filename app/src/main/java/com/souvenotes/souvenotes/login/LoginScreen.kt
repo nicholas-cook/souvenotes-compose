@@ -21,10 +21,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
-import org.koin.androidx.compose.getViewModel
 
 data class LoginScreenState(
     val email: String = "",
@@ -43,7 +43,7 @@ fun LoginRoute(
     onCreateAccountClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
     onLoginSuccess: () -> Unit,
-    viewModel: LoginViewModel = getViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val loginScreenState = viewModel.loginsScreenState
     LoginScreen(

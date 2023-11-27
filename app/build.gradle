@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -54,13 +56,17 @@ dependencies {
     implementation "androidx.compose.material:material:1.5.4"
     implementation "androidx.compose.ui:ui-tooling-preview:1.5.4"
     implementation "androidx.navigation:navigation-compose:2.7.5"
-    implementation 'androidx.activity:activity-compose:1.8.0'
+    implementation 'androidx.activity:activity-compose:1.8.1'
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
 
     // Accompanist - Compose helpers
     implementation 'com.google.accompanist:accompanist-systemuicontroller:0.23.1'
 
-    // Koin - DI
-    implementation 'io.insert-koin:koin-androidx-compose:3.1.2'
+    // Hilt - DI
+    implementation "com.google.dagger:hilt-android:2.48"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
+    kapt "com.google.dagger:hilt-compiler:2.44"
 
     // Firebase
     implementation "com.google.firebase:firebase-database:20.3.0"

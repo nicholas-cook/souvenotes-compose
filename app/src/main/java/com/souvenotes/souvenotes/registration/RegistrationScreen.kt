@@ -23,10 +23,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
-import org.koin.androidx.compose.getViewModel
 
 data class RegistrationScreenState(
     val email: String = "",
@@ -48,7 +48,7 @@ fun RegistrationRoute(
     onPrivacyClicked: () -> Unit,
     onRegistrationSuccess: () -> Unit,
     onNavigateUp: () -> Unit,
-    viewModel: RegistrationViewModel = getViewModel()
+    viewModel: RegistrationViewModel = hiltViewModel()
 ) {
     RegistrationScreen(
         registrationScreenState = viewModel.registrationScreenState,

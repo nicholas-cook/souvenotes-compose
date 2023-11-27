@@ -25,10 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAlertDialog
 import com.souvenotes.souvenotes.SouvenotesAppBar
-import org.koin.androidx.compose.getViewModel
 
 data class DeleteAccountScreenState(
     val progressBarVisible: Boolean = false,
@@ -40,7 +40,7 @@ data class DeleteAccountScreenState(
 fun DeleteAccountRoute(
     onDeleteSuccess: () -> Unit,
     onNavigateUp: () -> Unit,
-    viewModel: DeleteAccountViewModel = getViewModel()
+    viewModel: DeleteAccountViewModel = hiltViewModel()
 ) {
     DeleteAccountScreen(
         deleteAccountScreenState = viewModel.deleteAccountScreenState,

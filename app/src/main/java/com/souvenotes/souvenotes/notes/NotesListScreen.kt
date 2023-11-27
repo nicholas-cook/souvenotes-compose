@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.souvenotes.repository.model.NotesListItem
 import com.souvenotes.souvenotes.*
 import com.souvenotes.souvenotes.R
@@ -27,7 +28,6 @@ import com.souvenotes.souvenotes.ui.theme.SouvenotesBrown
 import com.souvenotes.souvenotes.ui.theme.SouvenotesLightGray
 import com.souvenotes.souvenotes.ui.theme.SouvenotesLighterGray
 import com.souvenotes.souvenotes.ui.theme.SouvenotesYellow
-import org.koin.androidx.compose.getViewModel
 
 data class NotesListScreenState(
     val notes: List<NotesListItem> = listOf(),
@@ -42,7 +42,7 @@ fun NotesListRoute(
     onAddNoteClicked: () -> Unit,
     toLoginScreen: () -> Unit,
     onSettingsClicked: () -> Unit,
-    viewModel: NotesListViewModel = getViewModel()
+    viewModel: NotesListViewModel = hiltViewModel()
 ) {
     NotesListScreen(
         notesListScreenState = viewModel.notesListScreenState,

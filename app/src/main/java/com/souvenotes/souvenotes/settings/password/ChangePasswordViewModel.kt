@@ -7,8 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.UpdatePasswordState
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ChangePasswordViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class ChangePasswordViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
 
     companion object {
         private const val PASSWORD_MIN_LENGTH = 8
@@ -54,6 +58,7 @@ class ChangePasswordViewModel(private val userRepository: UserRepository) : View
                         UpdatePasswordState.Updated -> changePasswordScreenState.copy(
                             changePasswordSuccess = true
                         )
+
                         UpdatePasswordState.Error -> changePasswordScreenState.copy(
                             changePasswordError = R.string.change_password_error,
                             progressBarVisible = false

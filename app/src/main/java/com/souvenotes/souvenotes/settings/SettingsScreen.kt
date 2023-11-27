@@ -41,12 +41,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.souvenotes.souvenotes.BuildConfig
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAlertDialog
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.repository.prefs.AppThemePref
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SettingsRoute(
@@ -55,11 +56,13 @@ fun SettingsRoute(
     onChangePasswordClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
     onTermsClicked: () -> Unit,
-    onPrivacyClicked: () -> Unit, viewModel: SettingsViewModel = getViewModel()
+    onPrivacyClicked: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val currentAppTheme by viewModel.currentAppTheme.collectAsStateWithLifecycle()
     SettingsScreen(
         onNavigateUp = onNavigateUp,
-        currentTheme = viewModel.currentAppTheme,
+        currentTheme = currentAppTheme,
         onThemeChanged = viewModel::onAppThemeSelected,
         onChangeEmailClicked = onChangeEmailClicked,
         onChangePasswordClicked = onChangePasswordClicked,

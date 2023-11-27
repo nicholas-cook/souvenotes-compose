@@ -6,8 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.SouvenotesScreen
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LandingViewModel(userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class LandingViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
 
     var destinationScreen by mutableStateOf(SouvenotesScreen.Landing)
         private set

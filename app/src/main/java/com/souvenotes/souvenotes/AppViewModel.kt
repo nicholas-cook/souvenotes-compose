@@ -1,4 +1,4 @@
-package com.souvenotes.souvenotes.settings
+package com.souvenotes.souvenotes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,23 +12,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(private val souvenotesPrefs: SouvenotesPrefs) :
-    ViewModel() {
+class AppViewModel @Inject constructor(private val souvenotesPrefs: SouvenotesPrefs) : ViewModel() {
 
-    private val _currentAppTheme = MutableStateFlow(souvenotesPrefs.appThemePrefFlow.value)
-    val currentAppTheme: StateFlow<AppThemePref> = _currentAppTheme.asStateFlow()
+    private val _appTheme = MutableStateFlow(souvenotesPrefs.appThemePrefFlow.value)
+    val appTheme: StateFlow<AppThemePref> = _appTheme.asStateFlow()
 
     init {
         viewModelScope.launch {
             souvenotesPrefs.appThemePrefFlow.collect {
-                _currentAppTheme.value = it
+                _appTheme.value = it
             }
-        }
-    }
-
-    fun onAppThemeSelected(appThemePref: AppThemePref) {
-        if (currentAppTheme.value != appThemePref) {
-            souvenotesPrefs.setAppThemePref(appThemePref)
         }
     }
 }

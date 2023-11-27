@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.notes.NotesRepository
 import com.souvenotes.repository.user.DeleteUserState
 import com.souvenotes.repository.user.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class DeleteAccountViewModel(
+@HiltViewModel
+class DeleteAccountViewModel @Inject constructor(
     private val notesRepository: NotesRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {

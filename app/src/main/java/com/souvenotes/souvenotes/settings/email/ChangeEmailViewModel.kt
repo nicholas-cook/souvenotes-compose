@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.UpdateEmailState
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ChangeEmailViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class ChangeEmailViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
 
     companion object {
         private const val EMAIL_MAX_LENGTH = 100
@@ -44,6 +48,7 @@ class ChangeEmailViewModel(private val userRepository: UserRepository) : ViewMod
                         changeEmailError = R.string.email_exists,
                         progressBarVisible = false
                     )
+
                     UpdateEmailState.Error -> changeEmailScreenState.copy(
                         changeEmailError = R.string.change_email_error,
                         progressBarVisible = false

@@ -1,22 +1,27 @@
 package com.souvenotes.souvenotes.policies
 
+import android.content.Context
 import android.content.res.AssetManager
-import android.os.Build
-import android.text.Html
-import android.text.Spannable
 import android.text.Spanned
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.text.HtmlCompat
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import javax.inject.Inject
 
-class PolicyViewModel(private val policyType: PolicyType, private val assetManager: AssetManager) :
-    ViewModel() {
+@HiltViewModel
+class PolicyViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     companion object {
         private const val PRIVACY_NAME = "souvenotes_privacy_policy.txt"
@@ -25,7 +30,12 @@ class PolicyViewModel(private val policyType: PolicyType, private val assetManag
 
     var policyScreenState by mutableStateOf(PolicyScreenState())
         private set
-    
+
+    private val _policyType: PolicyType? = savedStateHandle["policyType"]
+    val policyType: PolicyType = _policyType ?: PolicyType.Privacy
+
+    private val assetManager: AssetManager = context.assets
+
     init {
         loadText()
     }

@@ -3,20 +3,26 @@ package com.souvenotes.souvenotes.notes.edit
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.notes.NoteListener
 import com.souvenotes.repository.notes.NotesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class EditNoteViewModel(
-    private var noteKey: String,
-    private val createdAt: Long,
-    private val notesRepository: NotesRepository
+@HiltViewModel
+class EditNoteViewModel @Inject constructor(
+    private val notesRepository: NotesRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     companion object {
         private const val TITLE_MAX_LENGTH = 200
         private const val CONTENT_MAX_LENGTH = 25000
     }
+
+    private var noteKey: String = savedStateHandle["noteKey"] ?: ""
+    private val createdAt: Long = savedStateHandle["createdAt"] ?: -1L
 
     var editNoteScreenState by mutableStateOf(EditNoteScreenState(isNewNote = noteKey.isEmpty()))
         private set

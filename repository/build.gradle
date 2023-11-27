@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -10,8 +12,6 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -36,11 +36,15 @@ android {
 dependencies {
 
     // Firebase authentication and database
-    implementation 'com.google.firebase:firebase-auth:22.2.0'
+    implementation 'com.google.firebase:firebase-auth:22.3.0'
     implementation "com.google.firebase:firebase-database:20.3.0"
 
     // Joda-Time for date formatting
     implementation 'net.danlew:android.joda:2.10.12.2'
+
+    // Hilt - DI
+    implementation "com.google.dagger:hilt-android:2.48"
+    kapt "com.google.dagger:hilt-compiler:2.44"
 
     testImplementation 'junit:junit:4.13.2'
 }

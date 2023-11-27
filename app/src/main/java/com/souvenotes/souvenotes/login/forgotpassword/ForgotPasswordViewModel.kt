@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.ForgotPasswordState
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ForgotPasswordViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class ForgotPasswordViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
 
     companion object {
         private const val EMAIL_MAX_LENGTH = 100
@@ -45,10 +49,12 @@ class ForgotPasswordViewModel(private val userRepository: UserRepository) : View
                         resetSuccess = true,
                         progressBarVisible = false
                     )
+
                     ForgotPasswordState.InvalidUser -> forgotPasswordScreenState.copy(
                         resetError = R.string.error_account,
                         progressBarVisible = false
                     )
+
                     ForgotPasswordState.Error -> forgotPasswordScreenState.copy(
                         resetError = R.string.reset_password_error,
                         progressBarVisible = false

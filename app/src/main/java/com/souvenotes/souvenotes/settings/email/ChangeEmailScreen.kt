@@ -23,10 +23,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
-import org.koin.androidx.compose.getViewModel
 
 data class ChangeEmailScreenState(
     val email: String = "",
@@ -42,7 +42,7 @@ data class ChangeEmailScreenState(
 fun ChangeEmailRoute(
     onChangeEmailSuccess: () -> Unit,
     onNavigateUp: () -> Unit,
-    viewModel: ChangeEmailViewModel = getViewModel()
+    viewModel: ChangeEmailViewModel = hiltViewModel()
 ) {
     ChangeEmailScreen(
         changeEmailScreenState = viewModel.changeEmailScreenState,

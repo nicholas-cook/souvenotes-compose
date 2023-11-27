@@ -10,10 +10,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.souvenotes.souvenotes.SouvenotesGraph
 import com.souvenotes.souvenotes.SouvenotesScreen
-import com.souvenotes.souvenotes.notes.edit.EditNoteScreen
-import com.souvenotes.souvenotes.notes.edit.EditNoteViewModel
-import org.koin.androidx.compose.getViewModel
-import org.koin.core.parameter.parametersOf
+import com.souvenotes.souvenotes.notes.edit.EditNoteRoute
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -47,20 +44,8 @@ fun NavGraphBuilder.notesGraph(navHostController: NavHostController) {
                     type = NavType.LongType
                     defaultValue = -1L
                 })
-        ) { entry ->
-            val noteKey = entry.arguments?.getString("noteKey")
-            val createdAt = entry.arguments?.getLong("createdAt")
-            val editNoteViewModel =
-                getViewModel<EditNoteViewModel> { parametersOf(noteKey ?: "", createdAt ?: -1) }
-            EditNoteScreen(
-                editNoteScreenState = editNoteViewModel.editNoteScreenState,
-                onTitleChanged = editNoteViewModel::onTitleChanged,
-                onContentChanged = editNoteViewModel::onContentChanged,
-                onDeleteClicked = editNoteViewModel::deleteNote,
-                onErrorDismissed = editNoteViewModel::onErrorDismissed,
-                onScreenExit = editNoteViewModel::saveNote,
-                onNavigateUp = { navHostController.navigateUp() }
-            )
+        ) {
+            EditNoteRoute(onNavigateUp = { navHostController.navigateUp() })
         }
     }
 }

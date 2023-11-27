@@ -6,11 +6,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.souvenotes.souvenotes.R
@@ -40,7 +54,19 @@ data class EditNoteScreenState(
     val toList: Boolean = false
 )
 
-@ExperimentalComposeUiApi
+@Composable
+fun EditNoteRoute(onNavigateUp: () -> Unit, viewModel: EditNoteViewModel = hiltViewModel()) {
+    EditNoteScreen(
+        editNoteScreenState = viewModel.editNoteScreenState,
+        onTitleChanged = viewModel::onTitleChanged,
+        onContentChanged = viewModel::onContentChanged,
+        onDeleteClicked = viewModel::deleteNote,
+        onErrorDismissed = viewModel::onErrorDismissed,
+        onScreenExit = viewModel::saveNote,
+        onNavigateUp = onNavigateUp
+    )
+}
+
 @Composable
 fun EditNoteScreen(
     editNoteScreenState: EditNoteScreenState,

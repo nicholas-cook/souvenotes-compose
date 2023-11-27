@@ -1,8 +1,13 @@
 package com.souvenotes.repository.user
 
-import com.google.firebase.auth.*
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import javax.inject.Inject
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl @Inject constructor() : UserRepository {
 
     override fun isUserLoggedIn(): Boolean = FirebaseAuth.getInstance().currentUser != null
 
@@ -28,6 +33,7 @@ class UserRepositoryImpl : UserRepository {
                         is FirebaseAuthUserCollisionException -> onRegistrationResult(
                             RegistrationState.EmailCollision
                         )
+
                         else -> onRegistrationResult(RegistrationState.Error)
                     }
                 }
@@ -109,6 +115,7 @@ class UserRepositoryImpl : UserRepository {
                         is FirebaseAuthUserCollisionException -> onUpdateEmailResult(
                             UpdateEmailState.EmailCollision
                         )
+
                         else -> onUpdateEmailResult(UpdateEmailState.Error)
                     }
                 }

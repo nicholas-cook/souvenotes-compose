@@ -1,6 +1,5 @@
 package com.souvenotes.souvenotes
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,10 +7,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -23,30 +26,18 @@ import com.souvenotes.souvenotes.landing.LandingScreen
 import com.souvenotes.souvenotes.landing.LandingViewModel
 import com.souvenotes.souvenotes.login.loginGraph
 import com.souvenotes.souvenotes.notes.notesGraph
-import com.souvenotes.souvenotes.policies.PolicyScreen
+import com.souvenotes.souvenotes.policies.PolicyRoute
 import com.souvenotes.souvenotes.policies.PolicyType
-import com.souvenotes.souvenotes.policies.PolicyViewModel
 import com.souvenotes.souvenotes.registration.registrationGraph
 import com.souvenotes.souvenotes.repository.prefs.AppThemePref
-import com.souvenotes.souvenotes.repository.prefs.SouvenotesPrefs
 import com.souvenotes.souvenotes.settings.settingsGraph
 import com.souvenotes.souvenotes.ui.theme.DarkModeStatus
 import com.souvenotes.souvenotes.ui.theme.SouvenotesDarkYellow
 import com.souvenotes.souvenotes.ui.theme.SouvenotesTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.compose.getViewModel
-import org.koin.core.parameter.parametersOf
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val souvenotesPrefs: SouvenotesPrefs by inject()
-    private var appTheme by mutableStateOf(souvenotesPrefs.appThemePref)
-    private val appThemeListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == SouvenotesPrefs.KEY_APP_THEME_PREF) {
-                appTheme = souvenotesPrefs.appThemePref
-            }
-        }
 
     @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +47,8 @@ class MainActivity : ComponentActivity() {
             val systemUiController = rememberSystemUiController()
             val isDarkTheme = isSystemInDarkTheme()
             val navHostController = rememberNavController()
+            val appViewModel: AppViewModel = hiltViewModel()
+            val appTheme by appViewModel.appTheme.collectAsStateWithLifecycle()
             SideEffect {
                 val statusBarColor = when (appTheme) {
                     AppThemePref.Light -> SouvenotesDarkYellow
@@ -75,16 +68,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        souvenotesPrefs.registerOnSharedPreferenceChangeListener(appThemeListener)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        souvenotesPrefs.unregisterOnSharedPreferenceChangeListener(appThemeListener)
-    }
 }
 
 @ExperimentalFoundationApi
@@ -97,7 +80,7 @@ fun SouvenotesNavHost(navHostController: NavHostController, modifier: Modifier =
         modifier = modifier
     ) {
         composable(SouvenotesScreen.Landing.name) {
-            val landingViewModel: LandingViewModel = getViewModel()
+            val landingViewModel: LandingViewModel = hiltViewModel()
             LandingScreen(
                 destinationScreen = landingViewModel.destinationScreen,
                 onNavigateToLogin = {
@@ -121,14 +104,8 @@ fun SouvenotesNavHost(navHostController: NavHostController, modifier: Modifier =
                 navArgument("policyType") {
                     type = NavType.EnumType(PolicyType::class.java)
                 })
-        ) { entry ->
-            val policyType = entry.arguments?.getSerializable("policyType")
-            val policyViewModel = getViewModel<PolicyViewModel> { parametersOf(policyType) }
-            PolicyScreen(
-                policyType = policyType as PolicyType,
-                policyScreenState = policyViewModel.policyScreenState,
-                onErrorDismissed = policyViewModel::onErrorDismissed,
-                onNavigateUp = { navHostController.navigateUp() })
+        ) {
+            PolicyRoute(onNavigateUp = { navHostController.navigateUp() })
         }
         loginGraph(navHostController)
         registrationGraph(navHostController)

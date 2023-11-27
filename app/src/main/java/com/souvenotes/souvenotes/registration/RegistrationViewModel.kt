@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.RegistrationState
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class RegistrationViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
 
     companion object {
         private const val PASSWORD_MIN_LENGTH = 8
@@ -87,10 +91,12 @@ class RegistrationViewModel(private val userRepository: UserRepository) : ViewMo
                         RegistrationState.Registered -> registrationScreenState.copy(
                             registrationSuccess = true
                         )
+
                         RegistrationState.EmailCollision -> registrationScreenState.copy(
                             progressBarVisible = false,
                             registrationError = R.string.email_exists
                         )
+
                         RegistrationState.Error -> registrationScreenState.copy(
                             progressBarVisible = false,
                             registrationError = R.string.registration_error

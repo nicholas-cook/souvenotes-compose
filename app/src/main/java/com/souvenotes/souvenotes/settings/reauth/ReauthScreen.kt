@@ -23,11 +23,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.SouvenotesScreen
 import com.souvenotes.souvenotes.TextFieldError
-import org.koin.androidx.compose.getViewModel
 
 data class ReauthScreenState(
     val password: String = "",
@@ -44,7 +44,7 @@ fun ReauthRoute(
     destinationScreen: SouvenotesScreen,
     onReauthSuccess: () -> Unit,
     onNavigateUp: () -> Unit,
-    viewModel: ReauthViewModel = getViewModel()
+    viewModel: ReauthViewModel = hiltViewModel()
 ) {
     ReauthScreen(
         destinationScreen = destinationScreen,
