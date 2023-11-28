@@ -1,6 +1,16 @@
 package com.souvenotes.souvenotes.notes.edit
 
-import com.souvenotes.souvenotes.*
+import androidx.lifecycle.SavedStateHandle
+import com.souvenotes.souvenotes.CONTENT_TOO_LONG
+import com.souvenotes.souvenotes.ERROR_NOTE_KEY
+import com.souvenotes.souvenotes.NOTE_CONTENT
+import com.souvenotes.souvenotes.NOTE_TITLE
+import com.souvenotes.souvenotes.TITLE_TOO_LONG
+import com.souvenotes.souvenotes.UPDATED_NOTE_CONTENT
+import com.souvenotes.souvenotes.UPDATED_NOTE_TITLE
+import com.souvenotes.souvenotes.VALID_EMAIL
+import com.souvenotes.souvenotes.VALID_NOTE_KEY
+import com.souvenotes.souvenotes.VALID_PASSWORD
 import com.souvenotes.souvenotes.repositories.FakeNotesRepository
 import com.souvenotes.souvenotes.repositories.FakeUserRepository
 import org.junit.Assert
@@ -20,7 +30,10 @@ class EditNoteViewModelTest {
             userRepository.login(VALID_EMAIL, VALID_PASSWORD) {}
             notesRepository.editNoteError = editNoteError
         }
-        viewModel = EditNoteViewModel(noteKey, System.currentTimeMillis(), notesRepository)
+        viewModel = EditNoteViewModel(
+            notesRepository,
+            SavedStateHandle(mapOf("noteKey" to noteKey, "createdAt" to System.currentTimeMillis()))
+        )
     }
 
     @Test
