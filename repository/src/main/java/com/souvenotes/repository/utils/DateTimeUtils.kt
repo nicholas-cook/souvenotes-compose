@@ -1,19 +1,23 @@
 package com.souvenotes.repository.utils
 
-import org.joda.time.DateTime
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 object DateTimeUtils {
 
     private const val SAME_YEAR_FORMAT = "EEE, MMM d 'at' h:mm a"
-    private const val PREV_YEAR_FORMAT = "EEE, MMM d, YYYY 'at' h:mm a"
+    private const val PREV_YEAR_FORMAT = "EEE, MMM d, yyyy 'at' h:mm a"
 
     fun getDateTimeText(timestamp: Long): String {
-        val now = DateTime.now()
-        val dateTime = DateTime(timestamp)
+        val instant = Instant.ofEpochMilli(timestamp)
+        val dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+        val now = LocalDateTime.now()
         return if (now.year > dateTime.year) {
-            dateTime.toString(PREV_YEAR_FORMAT)
+            dateTime.format(DateTimeFormatter.ofPattern(PREV_YEAR_FORMAT))
         } else {
-            dateTime.toString(SAME_YEAR_FORMAT)
+            dateTime.format(DateTimeFormatter.ofPattern(SAME_YEAR_FORMAT))
         }
     }
 }

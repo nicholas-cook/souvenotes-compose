@@ -7,8 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.ReauthState
 import com.souvenotes.repository.user.UserRepository
 import com.souvenotes.souvenotes.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ReauthViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class ReauthViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
 
     companion object {
         private const val PASSWORD_MAX_LENGTH = 50
@@ -37,6 +41,7 @@ class ReauthViewModel(private val userRepository: UserRepository) : ViewModel() 
                         reauthError = R.string.error_credentials,
                         progressBarVisible = false
                     )
+
                     ReauthState.Error -> reauthScreenState.copy(
                         reauthError = R.string.reauth_error,
                         progressBarVisible = false
