@@ -1,13 +1,12 @@
 package com.souvenotes.souvenotes.settings.reauth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.souvenotes.repository.user.ReauthState
 import com.souvenotes.repository.user.UserRepository
-import com.souvenotes.souvenotes.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,40 +17,36 @@ class ReauthViewModel @Inject constructor(private val userRepository: UserReposi
         private const val PASSWORD_MAX_LENGTH = 50
     }
 
-    var reauthScreenState by mutableStateOf(ReauthScreenState())
-        private set
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password.asStateFlow()
+
+    private val _reauthScreenState =
+        MutableStateFlow<ReauthScreenState>(ReauthScreenState.Initial)
+    val reauthScreenState: StateFlow<ReauthScreenState> = _reauthScreenState.asStateFlow()
 
     fun onPasswordChanged(password: String) {
-        reauthScreenState =
-            reauthScreenState.copy(password = password, submitEnabled = password.isNotEmpty())
+        _password.value = password
     }
 
     fun onSubmitClicked() {
-        if (reauthScreenState.password.length > PASSWORD_MAX_LENGTH) {
-            reauthScreenState = reauthScreenState.copy(passwordError = R.string.password_too_long)
+        if (_password.value.length > PASSWORD_MAX_LENGTH) {
+            _reauthScreenState.value = ReauthScreenState.PasswordLengthError
             return
         }
-        reauthScreenState = reauthScreenState.copy(passwordError = null, progressBarVisible = true)
+        _reauthScreenState.value = ReauthScreenState.Loading
         userRepository.reauthenticate(
-            password = reauthScreenState.password,
+            password = _password.value,
             onReauthResult = { reauthState ->
-                reauthScreenState = when (reauthState) {
-                    ReauthState.Reauthed -> reauthScreenState.copy(reauthSuccess = true)
-                    ReauthState.InvalidCredentials -> reauthScreenState.copy(
-                        reauthError = R.string.error_credentials,
-                        progressBarVisible = false
-                    )
-
-                    ReauthState.Error -> reauthScreenState.copy(
-                        reauthError = R.string.reauth_error,
-                        progressBarVisible = false
-                    )
+                _reauthScreenState.value = when (reauthState) {
+                    ReauthState.Reauthed -> ReauthScreenState.ReauthSuccess
+                    ReauthState.InvalidCredentials -> ReauthScreenState.CredentialsError
+                    ReauthState.Error -> ReauthScreenState.ReauthError
                 }
             }
         )
     }
 
     fun onErrorDismissed() {
-        reauthScreenState = reauthScreenState.copy(reauthError = null)
+        _reauthScreenState.value = ReauthScreenState.Initial
     }
 }

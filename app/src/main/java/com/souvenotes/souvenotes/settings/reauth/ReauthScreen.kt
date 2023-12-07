@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -24,19 +25,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.souvenotes.souvenotes.R
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.SouvenotesScreen
 import com.souvenotes.souvenotes.TextFieldError
 
-data class ReauthScreenState(
-    val password: String = "",
-    val submitEnabled: Boolean = false,
-    val progressBarVisible: Boolean = false,
-    val passwordError: Int? = null,
-    val reauthSuccess: Boolean = false,
-    val reauthError: Int? = null
-)
+sealed class ReauthScreenState {
+    object Initial : ReauthScreenState()
+    object Loading : ReauthScreenState()
+    object PasswordLengthError : ReauthScreenState()
+    object CredentialsError : ReauthScreenState()
+    object ReauthError : ReauthScreenState()
+    object ReauthSuccess : ReauthScreenState()
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -46,9 +48,12 @@ fun ReauthRoute(
     onNavigateUp: () -> Unit,
     viewModel: ReauthViewModel = hiltViewModel()
 ) {
+    val reauthScreenState by viewModel.reauthScreenState.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
     ReauthScreen(
         destinationScreen = destinationScreen,
-        reauthScreenState = viewModel.reauthScreenState,
+        reauthScreenState = reauthScreenState,
+        password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
         onErrorDismissed = viewModel::onErrorDismissed,
         onSubmitClicked = viewModel::onSubmitClicked,
@@ -62,6 +67,7 @@ fun ReauthRoute(
 fun ReauthScreen(
     destinationScreen: SouvenotesScreen,
     reauthScreenState: ReauthScreenState,
+    password: String,
     onPasswordChanged: (String) -> Unit,
     onErrorDismissed: () -> Unit,
     onSubmitClicked: () -> Unit,
@@ -71,8 +77,8 @@ fun ReauthScreen(
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
-    if (reauthScreenState.reauthSuccess) {
-        LaunchedEffect(key1 = reauthScreenState.reauthSuccess) {
+    if (reauthScreenState == ReauthScreenState.ReauthSuccess) {
+        LaunchedEffect(key1 = Unit) {
             onReauthSuccess()
         }
     }
@@ -88,7 +94,7 @@ fun ReauthScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            if (reauthScreenState.progressBarVisible) {
+            if (reauthScreenState == ReauthScreenState.Loading) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
             Text(
@@ -96,8 +102,10 @@ fun ReauthScreen(
                 fontSize = 18.sp,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
             )
+            val submitEnabled =
+                reauthScreenState != ReauthScreenState.Loading && password.isNotEmpty()
             TextField(
-                value = reauthScreenState.password,
+                value = password,
                 onValueChange = {
                     onPasswordChanged(it)
                 },
@@ -112,17 +120,17 @@ fun ReauthScreen(
                     imeAction = ImeAction.Go
                 ),
                 keyboardActions = KeyboardActions(onGo = {
-                    if (reauthScreenState.submitEnabled) {
+                    if (submitEnabled) {
                         keyboardController?.hide()
                         onSubmitClicked()
                     }
                 }),
                 visualTransformation = PasswordVisualTransformation(),
-                isError = reauthScreenState.passwordError != null
+                isError = reauthScreenState == ReauthScreenState.PasswordLengthError
             )
-            if (reauthScreenState.passwordError != null) {
+            if (reauthScreenState == ReauthScreenState.PasswordLengthError) {
                 TextFieldError(
-                    errorRes = reauthScreenState.passwordError,
+                    errorRes = R.string.password_too_long,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
@@ -131,11 +139,7 @@ fun ReauthScreen(
                     keyboardController?.hide()
                     onSubmitClicked()
                 },
-                enabled = if (reauthScreenState.progressBarVisible) {
-                    false
-                } else {
-                    reauthScreenState.submitEnabled
-                },
+                enabled = submitEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -143,9 +147,13 @@ fun ReauthScreen(
                 Text(text = stringResource(R.string.submit))
             }
         }
-        if (reauthScreenState.reauthError != null) {
-            val errorMessage = stringResource(reauthScreenState.reauthError)
-            LaunchedEffect(key1 = reauthScreenState.reauthError) {
+        val reauthError = when (reauthScreenState) {
+            ReauthScreenState.CredentialsError -> stringResource(id = R.string.error_credentials)
+            ReauthScreenState.ReauthError -> stringResource(id = R.string.reauth_error)
+            else -> null
+        }
+        reauthError?.let { errorMessage ->
+            LaunchedEffect(key1 = Unit) {
                 scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
                 onErrorDismissed()
             }
@@ -177,7 +185,8 @@ fun ReauthScreenBar(destinationScreen: SouvenotesScreen, onNavigateUp: () -> Uni
 fun ReauthScreenPreview() {
     ReauthScreen(
         destinationScreen = SouvenotesScreen.ChangeEmail,
-        reauthScreenState = ReauthScreenState(),
+        reauthScreenState = ReauthScreenState.Initial,
+        password = "",
         onErrorDismissed = {},
         onPasswordChanged = {},
         onSubmitClicked = {},
