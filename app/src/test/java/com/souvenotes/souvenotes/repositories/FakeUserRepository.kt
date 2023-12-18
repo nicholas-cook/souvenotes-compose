@@ -90,7 +90,7 @@ class FakeUserRepository : UserRepository {
     ) {
         when (email) {
             VALID_EMAIL -> {
-                onUpdateEmailResult(UpdateEmailState.Updated)
+                onUpdateEmailResult(UpdateEmailState.VerificationSent)
             }
             COLLISION_EMAIL -> {
                 onUpdateEmailResult(UpdateEmailState.EmailCollision)

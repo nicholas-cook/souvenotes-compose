@@ -26,7 +26,7 @@ enum class ReauthState {
 }
 
 enum class UpdateEmailState {
-    Updated,
+    VerificationSent,
     EmailCollision,
     Error
 }

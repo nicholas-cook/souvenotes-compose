@@ -1,6 +1,5 @@
 package com.souvenotes.souvenotes.settings.email
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,9 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -24,18 +23,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.souvenotes.souvenotes.R
+import com.souvenotes.souvenotes.SouvenotesAlertDialog
 import com.souvenotes.souvenotes.SouvenotesAppBar
 import com.souvenotes.souvenotes.TextFieldError
 
-data class ChangeEmailScreenState(
-    val email: String = "",
-    val progressBarVisible: Boolean = false,
-    val submitEnabled: Boolean = false,
-    val emailError: Int? = null,
-    val changeEmailSuccess: Boolean = false,
-    val changeEmailError: Int? = null
-)
+sealed class ChangeEmailScreenState {
+    object Initial : ChangeEmailScreenState()
+    object Loading : ChangeEmailScreenState()
+    object EmailFormatError : ChangeEmailScreenState()
+    object EmailLengthError : ChangeEmailScreenState()
+    object EmailCollisionError : ChangeEmailScreenState()
+    object Error : ChangeEmailScreenState()
+    object Success : ChangeEmailScreenState()
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -44,8 +46,11 @@ fun ChangeEmailRoute(
     onNavigateUp: () -> Unit,
     viewModel: ChangeEmailViewModel = hiltViewModel()
 ) {
+    val changeEmailScreenState by viewModel.changeEmailScreenState.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
     ChangeEmailScreen(
-        changeEmailScreenState = viewModel.changeEmailScreenState,
+        email = email,
+        changeEmailScreenState = changeEmailScreenState,
         onEmailChanged = viewModel::onEmailChanged,
         onSubmitClicked = viewModel::onSubmitClicked,
         onErrorDismissed = viewModel::onErrorDismissed,
@@ -57,6 +62,7 @@ fun ChangeEmailRoute(
 @ExperimentalComposeUiApi
 @Composable
 fun ChangeEmailScreen(
+    email: String,
     changeEmailScreenState: ChangeEmailScreenState,
     onEmailChanged: (String) -> Unit,
     onSubmitClicked: () -> Unit,
@@ -67,13 +73,6 @@ fun ChangeEmailScreen(
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
-    if (changeEmailScreenState.changeEmailSuccess) {
-        val context = LocalContext.current
-        LaunchedEffect(key1 = changeEmailScreenState.changeEmailSuccess) {
-            Toast.makeText(context, R.string.email_change_success, Toast.LENGTH_LONG).show()
-            onChangeEmailSuccess()
-        }
-    }
     Scaffold(
         topBar = { ChangeEmailScreenBar(onNavigateUp) },
         scaffoldState = scaffoldState
@@ -84,11 +83,11 @@ fun ChangeEmailScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            if (changeEmailScreenState.progressBarVisible) {
+            if (changeEmailScreenState == ChangeEmailScreenState.Loading) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
             TextField(
-                value = changeEmailScreenState.email,
+                value = email,
                 onValueChange = {
                     onEmailChanged(it)
                 },
@@ -98,42 +97,67 @@ fun ChangeEmailScreen(
                 label = { Text(text = stringResource(R.string.hint_change_email)) },
                 maxLines = 1,
                 singleLine = true,
-                isError = changeEmailScreenState.emailError != null,
+                isError = changeEmailScreenState == ChangeEmailScreenState.EmailFormatError ||
+                        changeEmailScreenState == ChangeEmailScreenState.EmailLengthError,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
             )
-            if (changeEmailScreenState.emailError != null) {
-                TextFieldError(
-                    errorRes = changeEmailScreenState.emailError,
+            when (changeEmailScreenState) {
+                ChangeEmailScreenState.EmailFormatError -> TextFieldError(
+                    errorRes = R.string.email_format,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
+
+                ChangeEmailScreenState.EmailLengthError -> TextFieldError(
+                    errorRes = R.string.email_length_message,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                else -> {}
             }
             Button(
                 onClick = {
                     keyboardController?.hide()
                     onSubmitClicked()
                 },
-                enabled = if (changeEmailScreenState.progressBarVisible) {
-                    false
-                } else {
-                    changeEmailScreenState.submitEnabled
-                },
+                enabled = changeEmailScreenState != ChangeEmailScreenState.Loading &&
+                        email.isNotEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Text(text = stringResource(R.string.submit))
             }
-            if (changeEmailScreenState.changeEmailError != null) {
-                val errorMessage = stringResource(changeEmailScreenState.changeEmailError)
-                LaunchedEffect(key1 = changeEmailScreenState.changeEmailError) {
-                    scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
-                    onErrorDismissed()
+            when (changeEmailScreenState) {
+                ChangeEmailScreenState.EmailCollisionError -> {
+                    val errorMessage = stringResource(R.string.email_exists)
+                    LaunchedEffect(key1 = Unit) {
+                        scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
+                        onErrorDismissed()
+                    }
                 }
+
+                ChangeEmailScreenState.Error -> {
+                    val errorMessage = stringResource(R.string.change_email_error)
+                    LaunchedEffect(key1 = Unit) {
+                        scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
+                        onErrorDismissed()
+                    }
+                }
+
+                else -> {}
             }
+        }
+        if (changeEmailScreenState == ChangeEmailScreenState.Success) {
+            SouvenotesAlertDialog(
+                message = R.string.email_change_success,
+                onDismissRequest = onChangeEmailSuccess,
+                confirmText = android.R.string.ok,
+                confirmAction = onChangeEmailSuccess
+            )
         }
     }
 }
@@ -155,7 +179,8 @@ fun ChangeEmailScreenBar(onNavigateUp: () -> Unit) {
 @Composable
 fun ChangeEmailScreenPreview() {
     ChangeEmailScreen(
-        changeEmailScreenState = ChangeEmailScreenState(),
+        email = "",
+        changeEmailScreenState = ChangeEmailScreenState.Initial,
         onEmailChanged = {},
         onSubmitClicked = {},
         onErrorDismissed = {},

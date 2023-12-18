@@ -107,9 +107,9 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
     ) {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
-            user.updateEmail(email).addOnCompleteListener { task ->
+            user.verifyBeforeUpdateEmail(email).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onUpdateEmailResult(UpdateEmailState.Updated)
+                    onUpdateEmailResult(UpdateEmailState.VerificationSent)
                 } else {
                     when (task.exception) {
                         is FirebaseAuthUserCollisionException -> onUpdateEmailResult(
